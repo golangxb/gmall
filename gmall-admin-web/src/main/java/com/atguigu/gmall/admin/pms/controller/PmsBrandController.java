@@ -1,11 +1,10 @@
 package com.atguigu.gmall.admin.pms.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
-import com.atguigu.gmall.admin.pms.vo.PmsBrandParam;
 import com.atguigu.gmall.pms.entity.Brand;
 import com.atguigu.gmall.pms.service.BrandService;
 import com.atguigu.gmall.to.CommonResult;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.atguigu.gmall.to.PmsBrandParam;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.validation.BindingResult;
@@ -30,16 +29,18 @@ public class PmsBrandController {
     @GetMapping(value = "/listAll")
     public Object getList() {
 
-        //TODO 获取全部品牌列表  brandService.listAll()
-        return new CommonResult().success(null);
+        //获取全部品牌列表  brandService.listAll()
+        List<Brand> list = brandService.listAll();
+
+        return new CommonResult().success(list);
     }
 
     @ApiOperation(value = "添加品牌")
     @PostMapping(value = "/create")
     public Object create(@Validated @RequestBody PmsBrandParam pmsBrand, BindingResult result) {
         CommonResult commonResult = new CommonResult();
-        //TODO 添加品牌
-
+        //添加品牌
+        brandService.addBrand(pmsBrand);
         return commonResult;
     }
 
@@ -51,8 +52,10 @@ public class PmsBrandController {
         CommonResult commonResult = new CommonResult();
 
         //TODO 更新品牌
+        Brand brand = brandService.updateBrand(id, pmsBrandParam);
 
-        return commonResult;
+
+        return commonResult.success(brand);
     }
 
     @ApiOperation(value = "删除品牌")
@@ -60,7 +63,9 @@ public class PmsBrandController {
     public Object delete(@PathVariable("id") Long id) {
         CommonResult commonResult = new CommonResult();
 
-        //TODO 删除品牌
+        //删除品牌
+
+        brandService.deleteBrand(id);
 
         return commonResult;
     }
@@ -72,7 +77,7 @@ public class PmsBrandController {
                             @RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize) {
         CommonResult commonResult = new CommonResult();
 
-        //TODO 根据品牌名称分页获取品牌列表
+        //根据品牌名称分页获取品牌列表
         Map<String,Object> list = brandService.pageBrand(keyword,pageNum,pageSize);
 
 

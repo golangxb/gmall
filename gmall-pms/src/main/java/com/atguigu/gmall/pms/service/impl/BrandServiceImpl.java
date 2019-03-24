@@ -4,14 +4,17 @@ import com.alibaba.dubbo.config.annotation.Service;
 import com.atguigu.gmall.pms.entity.Brand;
 import com.atguigu.gmall.pms.mapper.BrandMapper;
 import com.atguigu.gmall.pms.service.BrandService;
+import com.atguigu.gmall.to.PmsBrandParam;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.additional.query.impl.QueryChainWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -47,5 +50,37 @@ public class BrandServiceImpl extends ServiceImpl<BrandMapper, Brand> implements
         result.put("list", brandPage.getRecords());
 
         return result;
+    }
+
+    @Override
+    public List<Brand> listAll() {
+        List<Brand> brands = baseMapper.selectList(null);
+
+        return brands;
+    }
+
+    @Override
+    public void addBrand(PmsBrandParam pmsBrand) {
+        Brand brand = new Brand();
+        BeanUtils.copyProperties(pmsBrand,brand);
+        baseMapper.insert(brand);
+
+    }
+
+    @Override
+    public Brand updateBrand(Long id, PmsBrandParam pmsBrandParam) {
+        Brand brand1 = baseMapper.selectById(id);
+
+        Brand brand = new Brand();
+        BeanUtils.copyProperties(pmsBrandParam,brand);
+        QueryWrapper<Brand> wrapper = new QueryWrapper<>();
+        wrapper.eq("id",id);
+        int update = baseMapper.update(brand,wrapper);
+        return brand1;
+    }
+
+    @Override
+    public void deleteBrand(Long id) {
+        baseMapper.deleteById(id);
     }
 }

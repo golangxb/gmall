@@ -92,7 +92,10 @@ public class PmsProductCategoryController {
         //TODO 查询所有一级分类及子分类
         List<PmsProductCategoryWithChildrenItemVo> list = productCategoryService.selectAllList();
 
-        //return new CommonResult().success(list);
-        return list;
+
+
+
+        return new CommonResult().success(list);
+        //return list;
     }
 }

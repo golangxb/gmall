@@ -2,17 +2,26 @@ package com.atguigu.gmall.pms.service.impl;
 
 import com.alibaba.dubbo.config.annotation.Service;
 
+import com.alibaba.fastjson.JSON;
+import com.atguigu.gmall.constant.RedisConstant;
 import com.atguigu.gmall.pms.entity.ProductCategory;
 import com.atguigu.gmall.pms.mapper.ProductCategoryMapper;
 import com.atguigu.gmall.pms.service.ProductCategoryService;
 import com.atguigu.gmall.pms.vo.PmsProductCategoryWithChildrenItemVo;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
+import springfox.documentation.spring.web.json.Json;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -25,11 +34,31 @@ import java.util.List;
  */
 @Service
 @Component
+@Slf4j
 public class ProductCategoryServiceImpl extends ServiceImpl<ProductCategoryMapper, ProductCategory> implements ProductCategoryService {
+    @Autowired
+    StringRedisTemplate  stringRedisTemplate;
+
     @Override
     public List<PmsProductCategoryWithChildrenItemVo> selectAllList() {
+        ValueOperations<String, String> ops = stringRedisTemplate.opsForValue();
 
-        List<PmsProductCategoryWithChildrenItemVo> list = baseMapper.listChildren();
+        String s1 = ops.get(RedisConstant.PRODUCT_COTEGORY_CACHE_KEY);
+        if(!StringUtils.isEmpty(s1)){
+            log.info("缓存命中");
+            List<PmsProductCategoryWithChildrenItemVo> itemVos = JSON.parseArray(s1, PmsProductCategoryWithChildrenItemVo.class);
+
+            return itemVos;
+
+        }
+
+        log.info("缓存命中");
+        List<PmsProductCategoryWithChildrenItemVo> list = baseMapper.listChildren(0);
+
+        String s = JSON.toJSONString(list);
+
+        ops.set(RedisConstant.PRODUCT_COTEGORY_CACHE_KEY,s,3, TimeUnit.DAYS);
+
 
         return list;
     }

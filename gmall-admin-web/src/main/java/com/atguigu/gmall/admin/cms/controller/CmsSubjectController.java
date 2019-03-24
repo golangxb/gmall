@@ -10,11 +10,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
  * 商品专题
  */
+@CrossOrigin
 @RestController
 @Api(tags = "CmsSubjectController", description = "商品专题管理")
 @RequestMapping("/subject")
@@ -26,7 +28,10 @@ public class CmsSubjectController {
     @GetMapping(value = "/listAll")
     public Object listAll() {
         //TODO 获取全部商品专题
-        return new CommonResult().success(null);
+        List<Subject> list = subjectService.getAll();
+
+
+        return new CommonResult().success(list);
     }
 
     @ApiOperation(value = "根据专题名称分页获取专题")
@@ -34,6 +39,10 @@ public class CmsSubjectController {
     public Object getList(@RequestParam(value = "keyword", required = false) String keyword,
                           @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
                           @RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize) {
-        return new CommonResult().success(null);
+
+        Map<String,Object> map = subjectService.getList(keyword,pageNum,pageSize);
+
+
+        return new CommonResult().success(map);
     }
 }

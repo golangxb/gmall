@@ -1,8 +1,10 @@
 package com.atguigu.gmall.pms.service;
 
 import com.atguigu.gmall.pms.entity.Brand;
+import com.atguigu.gmall.to.PmsBrandParam;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,4 +18,12 @@ import java.util.Map;
 public interface BrandService extends IService<Brand> {
 
     Map<String,Object> pageBrand(String keyword, Integer pageNum, Integer pageSize);
+
+    List<Brand> listAll();
+
+    void addBrand(PmsBrandParam pmsBrand);
+
+    Brand updateBrand(Long id, PmsBrandParam pmsBrandParam);
+
+    void deleteBrand(Long id);
 }

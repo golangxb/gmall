@@ -17,6 +17,20 @@
         <result column="keywords" property="keywords" />
         <result column="description" property="description" />
     </resultMap>
+    <resultMap id="PmsProductCategoryWithChildrenItemVo" type="com.atguigu.gmall.pms.vo.PmsProductCategoryWithChildrenItemVo" extends="BaseResultMap">
+        <collection property="children" select="listChildren" column="id"/>
+
+    </resultMap>
+    <update id="updateCountById">
+         UPDATE `pms_product_category` SET product_count=product_count+1 WHERE id = #{id}
+    </update>
+
+    <!--List<PmsProductCategoryWithChildrenItemVo> listChildren();-->
+    <select id="listChildren" resultMap="PmsProductCategoryWithChildrenItemVo">
+
+        select * from pms_product_category where parent_id = #{id};
+
+    </select>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">

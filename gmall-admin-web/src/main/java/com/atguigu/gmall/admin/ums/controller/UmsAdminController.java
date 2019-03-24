@@ -45,7 +45,7 @@ public class UmsAdminController {
     public Object register(@Valid@RequestBody UmsAdminParam umsAdminParam, BindingResult result) {
         Admin admin = null;
         //TODO 完成注册功能
-        int a = 10/0;
+
         return new CommonResult().success(admin);
     }
 

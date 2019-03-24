@@ -3,6 +3,9 @@ package com.atguigu.gmall.cms.service;
 import com.atguigu.gmall.cms.entity.Subject;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * <p>
  * 专题表 服务类
@@ -13,4 +16,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface SubjectService extends IService<Subject> {
 
+    List<Subject> getAll();
+
+    Map<String,Object> getList(String keyword, Integer pageNum, Integer pageSize);
 }
